@@ -1,0 +1,485 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Context Encoding for Semantic Segmentation (EncNet) &mdash; Encoding master documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" type="text/css" />
+  <link rel="stylesheet" href="../_static/css/encoding.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MSG-Net Style Transfer Example" href="style.html" />
+    <link rel="prev" title="EncNet on CIFAR-10" href="cifar.html" /> 
+
+
+  <script type="text/javascript" src="../_static/js/hidebib.js"></script>    
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html">
+          
+
+          
+            
+            <img src="../_static/icon.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                master (1.1.1b06042020)
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../notes/compile.html">Install and Citations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/compile.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/compile.html#citations">Citations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../notes/syncbn.html">Implementing Synchronized Multi-GPU Batch Normalization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../notes/syncbn.html#how-bn-works">How BN works?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/syncbn.html#why-synchronize-bn">Why Synchronize BN?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/syncbn.html#how-to-synchronize">How to Synchronize?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../notes/syncbn.html#citation">Citation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Experiment Systems</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="cifar.html">EncNet on CIFAR-10</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cifar.html#test-pre-trained-model">Test Pre-trained Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cifar.html#train-your-own-model">Train Your Own Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cifar.html#citation">Citation</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Context Encoding for Semantic Segmentation (EncNet)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#install-package">Install Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#test-pre-trained-model">Test Pre-trained Model</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#quick-demo">Quick Demo</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#train-your-own-model">Train Your Own Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#citation">Citation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="style.html">MSG-Net Style Transfer Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="style.html#tabe-of-content">Tabe of content</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html#msg-net">MSG-Net</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html#stylize-images-using-pre-trained-model">Stylize Images Using Pre-trained Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html#train-your-own-msg-net-model">Train Your Own MSG-Net Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="style.html#neural-style">Neural Style</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="texture.html">Deep TEN: Deep Texture Encoding Network Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="texture.html#test-pre-trained-model">Test Pre-trained Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="texture.html#train-your-own-model">Train Your Own Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="texture.html#citation">Citation</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../nn.html">encoding.nn</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../nn.html#encoding"><span class="hidden-section">Encoding</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nn.html#syncbatchnorm"><span class="hidden-section">SyncBatchNorm</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nn.html#batchnorm1d"><span class="hidden-section">BatchNorm1d</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nn.html#batchnorm2d"><span class="hidden-section">BatchNorm2d</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nn.html#batchnorm3d"><span class="hidden-section">BatchNorm3d</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nn.html#inspiration"><span class="hidden-section">Inspiration</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nn.html#upsampleconv2d"><span class="hidden-section">UpsampleConv2d</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../nn.html#grammatrix"><span class="hidden-section">GramMatrix</span></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../parallel.html">encoding.parallel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../parallel.html#dataparallelmodel"><span class="hidden-section">DataParallelModel</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parallel.html#dataparallelcriterion"><span class="hidden-section">DataParallelCriterion</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../parallel.html#allreduce"><span class="hidden-section">allreduce</span></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../models.html">encoding.models</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../models.html#resnet">ResNet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../models.html#id1"><span class="hidden-section">ResNet</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models.html#resnet18"><span class="hidden-section">resnet18</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models.html#resnet34"><span class="hidden-section">resnet34</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models.html#resnet50"><span class="hidden-section">resnet50</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models.html#resnet101"><span class="hidden-section">resnet101</span></a></li>
+<li class="toctree-l3"><a class="reference internal" href="../models.html#resnet152"><span class="hidden-section">resnet152</span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">encoding.utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#lr-scheduler"><span class="hidden-section">LR_Scheduler</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#save-checkpoint"><span class="hidden-section">save_checkpoint</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#batch-pix-accuracy"><span class="hidden-section">batch_pix_accuracy</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utils.html#batch-intersection-union"><span class="hidden-section">batch_intersection_union</span></a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Encoding</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+      <li>Context Encoding for Semantic Segmentation (EncNet)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/experiments/segmentation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="context-encoding-for-semantic-segmentation-encnet">
+<h1>Context Encoding for Semantic Segmentation (EncNet)<a class="headerlink" href="#context-encoding-for-semantic-segmentation-encnet" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="install-package">
+<h2>Install Package<a class="headerlink" href="#install-package" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Clone the GitHub repo:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">zhanghang1989</span><span class="o">/</span><span class="n">PyTorch</span><span class="o">-</span><span class="n">Encoding</span>
+</pre></div>
+</div>
+</li>
+<li><p>Install PyTorch Encoding (if not yet). Please follow the installation guide <a class="reference external" href="../notes/compile.html">Installing PyTorch Encoding</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="test-pre-trained-model">
+<h2>Test Pre-trained Model<a class="headerlink" href="#test-pre-trained-model" title="Permalink to this headline">¶</a></h2>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<dl class="simple">
+<dt>The model names contain the training information. For instance <code class="docutils literal notranslate"><span class="pre">FCN_ResNet50_PContext</span></code>:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">FCN</span></code> indicate the algorithm is “Fully Convolutional Network for Semantic Segmentation”</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ResNet50</span></code> is the name of backbone network.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PContext</span></code> means the PASCAL in Context dataset.</p></li>
+</ul>
+</dd>
+</dl>
+<p>How to get pretrained model, for example <code class="docutils literal notranslate"><span class="pre">FCN_ResNet50_PContext</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">encoding</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="s1">&#39;FCN_ResNet50_PContext&#39;</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Prepare the datasets by runing the scripts in the <code class="docutils literal notranslate"><span class="pre">scripts/</span></code> folder, for example preparing <code class="docutils literal notranslate"><span class="pre">PASCAL</span> <span class="pre">Context</span></code> dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="o">/</span><span class="n">prepare_pcontext</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<p>The test script is in the <code class="docutils literal notranslate"><span class="pre">experiments/segmentation/</span></code> folder. For evaluating the model (using MS),
+for example <code class="docutils literal notranslate"><span class="pre">Encnet_ResNet50_PContext</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">test</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">dataset</span> <span class="n">PContext</span> <span class="o">--</span><span class="n">model</span><span class="o">-</span><span class="n">zoo</span> <span class="n">Encnet_ResNet50_PContext</span> <span class="o">--</span><span class="nb">eval</span>
+<span class="c1"># pixAcc: 0.792, mIoU: 0.510: 100%|████████████████████████| 1276/1276 [46:31&lt;00:00,  2.19s/it]</span>
+</pre></div>
+</div>
+<p>The command for training the model can be found by clicking <code class="docutils literal notranslate"><span class="pre">cmd</span></code> in the table.</p>
+</div>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 7%" />
+<col style="width: 7%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Model</p></th>
+<th class="head"><p>pixAcc</p></th>
+<th class="head"><p>mIoU</p></th>
+<th class="head"><p>Command</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Encnet_ResNet50_PContext</p></td>
+<td><p>79.2%</p></td>
+<td><p>51.0%</p></td>
+<td><p><span class="raw-html"><a href="javascript:toggleblock('cmd_enc50_pcont')" class="toggleblock">cmd</a></span></p></td>
+</tr>
+<tr class="row-odd"><td><p>EncNet_ResNet101_PContext</p></td>
+<td><p>80.7%</p></td>
+<td><p>54.1%</p></td>
+<td><p><span class="raw-html"><a href="javascript:toggleblock('cmd_enc101_pcont')" class="toggleblock">cmd</a></span></p></td>
+</tr>
+<tr class="row-even"><td><p>EncNet_ResNet50_ADE</p></td>
+<td><p>80.1%</p></td>
+<td><p>41.5%</p></td>
+<td><p><span class="raw-html"><a href="javascript:toggleblock('cmd_enc50_ade')" class="toggleblock">cmd</a></span></p></td>
+</tr>
+<tr class="row-odd"><td><p>EncNet_ResNet101_ADE</p></td>
+<td><p>81.3%</p></td>
+<td><p>44.4%</p></td>
+<td><p><span class="raw-html"><a href="javascript:toggleblock('cmd_enc101_ade')" class="toggleblock">cmd</a></span></p></td>
+</tr>
+<tr class="row-even"><td><p>EncNet_ResNet101_VOC</p></td>
+<td><p>N/A</p></td>
+<td><p>85.9%</p></td>
+<td><p><span class="raw-html"><a href="javascript:toggleblock('cmd_enc101_voc')" class="toggleblock">cmd</a></span></p></td>
+</tr>
+</tbody>
+</table>
+<code xml:space="preserve" id="cmd_fcn50_pcont" style="display: none; text-align: left; white-space: pre-wrap">
+CUDA_VISIBLE_DEVICES=0,1,2,3 python train.py --dataset PContext --model FCN
+</code>
+
+<code xml:space="preserve" id="cmd_enc50_pcont" style="display: none; text-align: left; white-space: pre-wrap">
+CUDA_VISIBLE_DEVICES=0,1,2,3 python train.py --dataset PContext --model EncNet --aux --se-loss
+</code>
+
+<code xml:space="preserve" id="cmd_enc101_pcont" style="display: none; text-align: left; white-space: pre-wrap">
+CUDA_VISIBLE_DEVICES=0,1,2,3 python train.py --dataset PContext --model EncNet --aux --se-loss --backbone resnet101
+</code>
+
+<code xml:space="preserve" id="cmd_psp50_ade" style="display: none; text-align: left; white-space: pre-wrap">
+CUDA_VISIBLE_DEVICES=0,1,2,3 python train.py --dataset ADE20K --model PSP --aux
+</code>
+
+<code xml:space="preserve" id="cmd_enc50_ade" style="display: none; text-align: left; white-space: pre-wrap">
+CUDA_VISIBLE_DEVICES=0,1,2,3 python train.py --dataset ADE20K --model EncNet --aux --se-loss
+</code>
+
+
+<code xml:space="preserve" id="cmd_enc101_ade" style="display: none; text-align: left; white-space: pre-wrap">
+CUDA_VISIBLE_DEVICES=0,1,2,3 python train.py --dataset ADE20K --model EncNet --aux --se-loss --backbone resnet101 --base-size 640 --crop-size 576
+</code>
+
+<code xml:space="preserve" id="cmd_enc101_voc" style="display: none; text-align: left; white-space: pre-wrap">
+# First finetuning COCO dataset pretrained model on augmented set
+# You can also train from scratch on COCO by yourself
+CUDA_VISIBLE_DEVICES=0,1,2,3 python train.py --dataset Pascal_aug --model-zoo EncNet_Resnet101_COCO --aux --se-loss --lr 0.001 --syncbn --ngpus 4 --checkname res101 --ft
+# Finetuning on original set
+CUDA_VISIBLE_DEVICES=0,1,2,3 python train.py --dataset Pascal_voc --model encnet --aux  --se-loss --backbone resnet101 --lr 0.0001 --syncbn --ngpus 4 --checkname res101 --resume runs/Pascal_aug/encnet/res101/checkpoint.params --ft
+</code><div class="section" id="quick-demo">
+<h3>Quick Demo<a class="headerlink" href="#quick-demo" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">encoding</span>
+
+<span class="c1"># Get the model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">encoding</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="s1">&#39;Encnet_ResNet50_PContext&#39;</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+<span class="c1"># Prepare the image</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;https://github.com/zhanghang1989/image-data/blob/master/&#39;</span> <span class="o">+</span> \
+      <span class="s1">&#39;encoding/segmentation/pcontext/2010_001829_org.jpg?raw=true&#39;</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;example.jpg&#39;</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">encoding</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">load_image</span><span class="p">(</span>
+    <span class="n">encoding</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">filename</span><span class="p">))</span><span class="o">.</span><span class="n">cuda</span><span class="p">()</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Make prediction</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+<span class="n">predict</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+
+<span class="c1"># Get color pallete for visualization</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">encoding</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_mask_pallete</span><span class="p">(</span><span class="n">predict</span><span class="p">,</span> <span class="s1">&#39;pcontext&#39;</span><span class="p">)</span>
+<span class="n">mask</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;output.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/zhanghang1989/image-data/master/encoding/segmentation/pcontext/2010_001829_org.jpg"><img alt="https://raw.githubusercontent.com/zhanghang1989/image-data/master/encoding/segmentation/pcontext/2010_001829_org.jpg" src="https://raw.githubusercontent.com/zhanghang1989/image-data/master/encoding/segmentation/pcontext/2010_001829_org.jpg" style="width: 45%;" /></a>
+<a class="reference internal image-reference" href="https://raw.githubusercontent.com/zhanghang1989/image-data/master/encoding/segmentation/pcontext/2010_001829.png"><img alt="https://raw.githubusercontent.com/zhanghang1989/image-data/master/encoding/segmentation/pcontext/2010_001829.png" src="https://raw.githubusercontent.com/zhanghang1989/image-data/master/encoding/segmentation/pcontext/2010_001829.png" style="width: 45%;" /></a>
+</div>
+</div>
+<div class="section" id="train-your-own-model">
+<h2>Train Your Own Model<a class="headerlink" href="#train-your-own-model" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p>Prepare the datasets by runing the scripts in the <code class="docutils literal notranslate"><span class="pre">scripts/</span></code> folder, for example preparing <code class="docutils literal notranslate"><span class="pre">PASCAL</span> <span class="pre">Context</span></code> dataset:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="n">scripts</span><span class="o">/</span><span class="n">prepare_pcontext</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+</li>
+<li><p>The training script is in the <code class="docutils literal notranslate"><span class="pre">experiments/segmentation/</span></code> folder, example training command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span> <span class="n">python</span> <span class="n">train</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">dataset</span> <span class="n">pcontext</span> <span class="o">--</span><span class="n">model</span> <span class="n">encnet</span> <span class="o">--</span><span class="n">aux</span> <span class="o">--</span><span class="n">se</span><span class="o">-</span><span class="n">loss</span>
+</pre></div>
+</div>
+</li>
+<li><p>Detail training options, please run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">train.py</span> <span class="pre">-h</span></code>. Commands for reproducing pre-trained models can be found in the table.</p></li>
+</ul>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>The validation metrics during the training only using center-crop is just for monitoring the
+training correctness purpose. For evaluating the pretrained model on validation set using MS,
+please use the command:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">CUDA_VISIBLE_DEVICES</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span> <span class="n">python</span> <span class="n">test</span><span class="o">.</span><span class="n">py</span> <span class="o">--</span><span class="n">dataset</span> <span class="n">pcontext</span> <span class="o">--</span><span class="n">model</span> <span class="n">encnet</span> <span class="o">--</span><span class="n">aux</span> <span class="o">--</span><span class="n">se</span><span class="o">-</span><span class="n">loss</span> <span class="o">--</span><span class="n">resume</span> <span class="n">mycheckpoint</span> <span class="o">--</span><span class="nb">eval</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="citation">
+<h2>Citation<a class="headerlink" href="#citation" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul>
+<li><p>Hang Zhang, Kristin Dana, Jianping Shi, Zhongyue Zhang, Xiaogang Wang, Ambrish Tyagi, Amit Agrawal. “Context Encoding for Semantic Segmentation”  <em>The IEEE Conference on Computer Vision and Pattern Recognition (CVPR) 2018</em>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nd">@InProceedings</span><span class="p">{</span><span class="n">Zhang_2018_CVPR</span><span class="p">,</span>
+<span class="n">author</span> <span class="o">=</span> <span class="p">{</span><span class="n">Zhang</span><span class="p">,</span> <span class="n">Hang</span> <span class="ow">and</span> <span class="n">Dana</span><span class="p">,</span> <span class="n">Kristin</span> <span class="ow">and</span> <span class="n">Shi</span><span class="p">,</span> <span class="n">Jianping</span> <span class="ow">and</span> <span class="n">Zhang</span><span class="p">,</span> <span class="n">Zhongyue</span> <span class="ow">and</span> <span class="n">Wang</span><span class="p">,</span> <span class="n">Xiaogang</span> <span class="ow">and</span> <span class="n">Tyagi</span><span class="p">,</span> <span class="n">Ambrish</span> <span class="ow">and</span> <span class="n">Agrawal</span><span class="p">,</span> <span class="n">Amit</span><span class="p">},</span>
+<span class="n">title</span> <span class="o">=</span> <span class="p">{</span><span class="n">Context</span> <span class="n">Encoding</span> <span class="k">for</span> <span class="n">Semantic</span> <span class="n">Segmentation</span><span class="p">},</span>
+<span class="n">booktitle</span> <span class="o">=</span> <span class="p">{</span><span class="n">The</span> <span class="n">IEEE</span> <span class="n">Conference</span> <span class="n">on</span> <span class="n">Computer</span> <span class="n">Vision</span> <span class="ow">and</span> <span class="n">Pattern</span> <span class="n">Recognition</span> <span class="p">(</span><span class="n">CVPR</span><span class="p">)},</span>
+<span class="n">month</span> <span class="o">=</span> <span class="p">{</span><span class="n">June</span><span class="p">},</span>
+<span class="n">year</span> <span class="o">=</span> <span class="p">{</span><span class="mi">2018</span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="style.html" class="btn btn-neutral float-right" title="MSG-Net Style Transfer Example" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cifar.html" class="btn btn-neutral float-left" title="EncNet on CIFAR-10" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Hang Zhang
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
